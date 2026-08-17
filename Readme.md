@@ -1,188 +1,163 @@
 # EV Service Intelligence Platform
 
-An end-to-end Machine Learning platform for predicting EV service outcomes.
+An end-to-end Machine Learning platform designed to predict key EV service outcomes before a service visit is completed.
 
-The system predicts:
+The platform predicts:
 
-- Repair Cost — Regression
-- Turnaround Time (TAT) — Regression
-- Delay Risk — Classification
+- Repair Cost
+- Turnaround Time (TAT)
+- Delay Risk
+
+The project covers the complete ML lifecycle from data generation and analysis to model development, explainability, API development, Docker containerization, and cloud deployment.
+
+---
 
 ## Business Problem
 
 EV service centers need to estimate repair cost, service turnaround time, and potential delays before completing a service visit.
 
-This platform uses vehicle, battery, service, workshop, technician, parts, and warranty information to generate actionable predictions.
+This platform uses vehicle, battery, service, workshop, technician, parts, and warranty information to generate actionable predictions that can support service planning and operational decision-making.
 
-## ML Targets
+### Potential Business Users
 
-| Target | Problem Type | Output |
+- Service Center Managers
+- Workshop Operations Teams
+- Service Advisors
+- Parts & Supply Teams
+- After-Sales Teams
+
+---
+
+## ML Objectives
+
+| Prediction | ML Problem | Business Output |
 |---|---|---|
 | Repair Cost | Regression | Predicted repair cost |
-| TAT | Regression | Predicted turnaround time in days |
-| Delay Risk | Classification | Delay probability + LOW/HIGH risk |
+| Turnaround Time (TAT) | Regression | Predicted service duration in days |
+| Delay Risk | Binary Classification | Delay probability and LOW/HIGH risk |
 
-## Project Architecture
+---
 
+## Key Features
+
+The prediction system uses information related to:
+
+- Vehicle characteristics
+- Vehicle age
+- Battery age and health
+- Battery replacement
+- Service visit history
+- Issue family and exact issue
+- Parts requirement and availability
+- Parts ordering status
+- Expected parts ETA
+- Workshop utilization
+- Active jobs on arrival
+- Technician experience
+- Technician efficiency
+- Repair complexity
+- Labor hours
+- Warranty status
+- Warranty coverage
+- Day type
+
+---
+
+## Project Workflow
+
+```text
 Raw EV Service Data
-        ↓
-Data Preparation & Feature Engineering
-        ↓
-Machine Learning Models
-        ↓
-Saved Model Artifacts
-        ↓
-FastAPI
-        ↓
-Docker
-        ↓
-Render
-        ↓
-Public Prediction API
+        |
+        v
+Data Preparation
+        |
+        v
+Exploratory Data Analysis
+        |
+        v
+Feature Engineering
+        |
+        v
+Model Selection
+        |
+        +-------------------+
+        |                   |
+        v                   v
+ Repair Cost Model       TAT Model
+        |                   |
+        +---------+---------+
+                  |
+                  v
+             Delay Model
+                  |
+                  v
+             Model Audit
+                  |
+                  v
+         Inference Pipeline
+                  |
+                  v
+               FastAPI
+                  |
+                  v
+               Docker
+                  |
+                  v
+               Render
+                  |
+                  v
+        Public Prediction API
 
-## Models
+## Machine Learning Models
 
-Three trained models are used:
+Three trained model artifacts are used:
 
-- `repair_cost_model.pkl`
-- `tat_model.pkl`
-- `delay_model.pkl`
+```text
+Models/
+├── repair_cost_model.pkl
+├── tat_model.pkl
+└── delay_model.pkl
+
+
+The trained models are loaded by the FastAPI application during application startup.
+
+---
+
+## Model Explainability
+
+SHAP was used to understand model predictions and identify important factors influencing the outputs.
+
+The analysis focuses on operational factors such as:
+
+- Battery health
+- Vehicle age
+- Battery age
+- Workshop utilization
+- Active jobs
+- Technician experience
+- Repair complexity
+- Labor hours
+- Parts availability
+- Expected parts ETA
+
+This helps connect model predictions with operational decision-making.
+
+---
 
 ## API
+
+The trained models are exposed through a FastAPI REST API.
 
 ### Health Check
 
 `GET /health`
 
-Returns the API and model loading status.
+Used to verify that the API is running and that all trained models have loaded successfully.
 
-Example:
+Example response:
 
 ```json
 {
   "status": "healthy",
   "models_loaded": true
 }
-Prediction
-
-POST /predict
-
-The API accepts service-visit information and returns:
-
-{
-  "Predicted_Repair_Cost": 2016.71,
-  "Predicted_TAT_Days": 0.47,
-  "Delay_Probability": 0.03,
-  "Delay_Risk": "LOW"
-}
-Example Input
-{
-  "Visit_Number": 3,
-  "Vehicle_Model": "Nexon EV",
-  "Vehicle_Age_at_Service": 4,
-  "Battery_Age_at_Service": 3,
-  "Battery_Health_at_Service": 82,
-  "Battery_Replaced": false,
-  "Issue_Family": "Brake",
-  "Exact_Issue": "Brake Pad Wear",
-  "Parts_Required": true,
-  "Parts_Available": true,
-  "Part_Ordered": false,
-  "Expected_Part_ETA_Days": 0,
-  "Active_Jobs_On_Arrival": 8,
-  "Workshop_Utilization": 0.55,
-  "Day_Type": "Weekday",
-  "Technician_Experience_Years": 5,
-  "Repair_Complexity": 2,
-  "Base_Labor_Hours": 2.5,
-  "Technician_Efficiency": 0.9,
-  "Effective_Labor_Hours": 2.25,
-  "Warranty_Status": "Active",
-  "Warranty_Covered": true,
-  "Expected_TAT_Days": 1.2
-}
-Deployment
-
-The application is containerized using Docker and deployed as a FastAPI web service.
-
-Deployment stack:
-
-Python
-Scikit-learn
-FastAPI
-Uvicorn
-Docker
-GitHub
-Render
-Deployment Validation
-
-The deployed API was validated using:
-
-Health endpoint
-Swagger/OpenAPI documentation
-Realistic prediction request
-HTTP 200 response
-Successful loading of all three ML models
-Project Structure
-EV_Service_Intelligence/
-│
-├── App/
-│   └── app.py
-│
-├── Data/
-│   └── ev_service_history_raw.csv
-│
-├── Models/
-│   ├── repair_cost_model.pkl
-│   ├── tat_model.pkl
-│   └── delay_model.pkl
-│
-├── Notebook/
-│   ├── 01_dataset_generation.ipynb
-│   ├── 02_EDA.ipynb
-│   ├── 03_Feature_Engineering.ipynb
-│   ├── 04_Model_Selection.ipynb
-│   ├── 05_Repair_Cost.ipynb
-│   ├── 06_Shap.ipynb
-│   ├── 07_TAT_Model.ipynb
-│   ├── 08_TAT_Tuning.ipynb
-│   ├── 09_Delay_Model.ipynb
-│   ├── 10_Delay_Tuning.ipynb
-│   ├── 11_Model_Audit.ipynb
-│   └── 12_Inference_Pipeline.ipynb
-│
-├── Dockerfile
-├── Requirements.txt
-├── .dockerignore
-├── .gitignore
-└── Readme.md
-Live API
-
-Public API:
-
-https://ev-service-intelligence.onrender.com
-
-Swagger documentation:
-
-https://ev-service-intelligence.onrender.com/docs
-
-Health check:
-
-https://ev-service-intelligence.onrender.com/health
-
-
-
-### One correction I intentionally made
-
-
-The example uses:
-
-
-```json
-"Part_Ordered": false
-
-not
-
-"Parts_Ordered": false
-
-because your actual ServiceRequest schema uses Part_Ordered.
