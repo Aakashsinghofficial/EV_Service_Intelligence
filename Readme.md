@@ -30,47 +30,44 @@ Docker
 Render
       ↓
 Public API
-
+```
 
 ## Models
 
 ```text
 Repair Cost Model
-        ↓
+      ↓
 repair_cost_model.pkl
 
 TAT Model
-        ↓
+      ↓
 tat_model.pkl
 
 Delay Risk Model
-        ↓
+      ↓
 delay_model.pkl
 
 SHAP
-  ↓
+      ↓
 Model Explainability
+```
 
 ## API
 
 ```text
 GET /health
-     ↓
+      ↓
 API & Model Health Check
 
 POST /predict
-     ↓
+      ↓
 EV Service Input
-     ↓
+      ↓
 ML Predictions
-     ↓
+      ↓
 Repair Cost + TAT + Delay Risk
+```
 
-
-
-### Deployment
-
-```markdown
 ## Deployment
 
 ```text
@@ -83,11 +80,8 @@ GitHub
 Render
    ↓
 Public API
+```
 
-
-### Live API
-
-```markdown
 ## Live API
 
 ```text
@@ -95,18 +89,15 @@ API
 ↓
 https://ev-service-intelligence.onrender.com
 
-Swagger Documentation
+Swagger
 ↓
 https://ev-service-intelligence.onrender.com/docs
 
 Health Check
 ↓
 https://ev-service-intelligence.onrender.com/health
+```
 
-
-### Tech Stack
-
-```markdown
 ## Tech Stack
 
 ```text
@@ -119,12 +110,8 @@ FastAPI
 Docker
 GitHub
 Render
+```
 
-
-
-### Status
-
-```markdown
 ## Status
 
 ```text
@@ -135,3 +122,4 @@ Cloud Deployment   ✓
 Public API         ✓
 
 STATUS: DEPLOYED & LIVE 🚀
+```
