@@ -1,205 +1,65 @@
-\# EV Service Intelligence Platform
-
-
+# EV Service Intelligence Platform
 
 An end-to-end Machine Learning platform for predicting EV service outcomes.
 
+The system predicts:
 
+- Repair Cost — Regression
+- Turnaround Time (TAT) — Regression
+- Delay Risk — Classification
 
-\## Business Problem
+## Business Problem
 
+EV service centers need to estimate repair cost, service turnaround time, and potential delays before completing a service visit.
 
+This platform uses vehicle, battery, service, workshop, technician, parts, and warranty information to generate actionable predictions.
 
-EV service centers need to estimate service cost, turnaround time, and delay risk before completing a service visit.
+## ML Targets
 
-
-
-This project uses vehicle, battery, service, workshop, technician, parts, and warranty information to generate actionable predictions for EV service operations.
-
-
-
-\## Machine Learning Targets
-
-
-
-| Target | ML Problem | Business Output |
-
+| Target | Problem Type | Output |
 |---|---|---|
-
 | Repair Cost | Regression | Predicted repair cost |
+| TAT | Regression | Predicted turnaround time in days |
+| Delay Risk | Classification | Delay probability + LOW/HIGH risk |
 
-| Turnaround Time (TAT) | Regression | Predicted service duration in days |
-
-| Delay Risk | Binary Classification | Delay probability and HIGH/LOW risk |
-
-
-
-
-
-
-
-\## Project Architecture
-
-
-
-```text
+## Project Architecture
 
 Raw EV Service Data
-
-&#x20;       |
-
-&#x20;       v
-
-Data Preparation \& Feature Engineering
-
-&#x20;       |
-
-&#x20;       v
-
+        ↓
+Data Preparation & Feature Engineering
+        ↓
 Machine Learning Models
+        ↓
+Saved Model Artifacts
+        ↓
+FastAPI
+        ↓
+Docker
+        ↓
+Render
+        ↓
+Public Prediction API
 
-&#x20;       |
+## Models
 
-&#x20;       +-------------------+
+Three trained models are used:
 
-&#x20;       |                   |
-
-&#x20;       v                   v
-
-&#x20;Repair Cost Model       TAT Model
-
-&#x20;       |                   |
-
-&#x20;       +---------+---------+
-
-&#x20;                 |
-
-&#x20;                 v
-
-&#x20;            Delay Model
-
-&#x20;                 |
-
-&#x20;                 v
-
-&#x20;            Saved Models
-
-&#x20;                 |
-
-&#x20;                 v
-
-&#x20;              FastAPI
-
-&#x20;             /       \\
-
-&#x20;            /         \\
-
-&#x20;       /health      /predict
-
-&#x20;            \\         /
-
-&#x20;             \\       /
-
-&#x20;              Docker
-
-
-
+- `repair_cost_model.pkl`
+- `tat_model.pkl`
+- `delay_model.pkl`
 
 ## API
 
-The trained machine learning models are served through a FastAPI application.
+### Health Check
 
-### Endpoints
+`GET /health`
 
-#### GET `/health`
+Returns the API and model loading status.
 
-Checks whether the API is running and whether all trained models are loaded.
-
-Example response:
+Example:
 
 ```json
 {
   "status": "healthy",
   "models_loaded": true
 }
-
-
-POST /predict
-
-Accepts EV service-visit information and returns:
-
-Predicted repair cost
-Predicted turnaround time
-Delay probability
-Delay risk
-
-Example response:
-
-{
-  "Predicted_Repair_Cost": 2016.71,
-  "Predicted_TAT_Days": 0.47,
-  "Delay_Probability": 0.03,
-  "Delay_Risk": "LOW"
-}
-
-
-API Documentation
-
-When running locally:
-
-http://127.0.0.1:8000/docs
-
-Swagger UI provides interactive API testing.
-
-
-
-## Docker
-
-The FastAPI application is containerized using Docker for reproducible deployment.
-
-### Build Docker Image
-
-```bash
-docker build -t ev-service-intelligence .
-
-
-Run Container:docker run -d -p 8000:8000 --name ev-service-api ev-service-intelligence
-
-Check Running Container : docker ps
-
-View Container Logs:docker logs ev-service-api
-
-Stop Container : docker stop ev-service-api
-
-Start Container Again : docker start ev-service-api
-
-
-
-
-## Project Structure
-
-```text
-EV_Service_Intelligence/
-│
-├── App/
-│   └── app.py
-│
-├── Data/
-│   └── raw EV service dataset
-│
-├── Models/
-│   ├── delay_model.pkl
-│   ├── repair_cost_model.pkl
-│   └── tat_model.pkl
-│
-├── Notebook/
-│   └── ML development notebooks
-│
-├── SRC/
-│
-├── Dockerfile
-├── .dockerignore
-├── .gitignore
-├── Requirements.txt
-└── Readme.md
-
