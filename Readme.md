@@ -31,48 +31,107 @@ Render
       ↓
 Public API
 
+
 ## Models
 
-- `repair_cost_model.pkl` — Repair Cost
-- `tat_model.pkl` — Turnaround Time
-- `delay_model.pkl` — Delay Risk
+```text
+Repair Cost Model
+        ↓
+repair_cost_model.pkl
 
-SHAP was used for model explainability.
+TAT Model
+        ↓
+tat_model.pkl
+
+Delay Risk Model
+        ↓
+delay_model.pkl
+
+SHAP
+  ↓
+Model Explainability
 
 ## API
 
-### `GET /health`
+```text
+GET /health
+     ↓
+API & Model Health Check
 
-Checks API and model status.
+POST /predict
+     ↓
+EV Service Input
+     ↓
+ML Predictions
+     ↓
+Repair Cost + TAT + Delay Risk
 
-### `POST /predict`
 
-Returns:
 
-```json
-{
-  "Predicted_Repair_Cost": 2016.71,
-  "Predicted_TAT_Days": 0.47,
-  "Delay_Probability": 0.03,
-  "Delay_Risk": "LOW"
-}
+### Deployment
 
+```markdown
 ## Deployment
 
-Built with **FastAPI + Docker** and deployed on **Render**.
+```text
+FastAPI
+   ↓
+Docker
+   ↓
+GitHub
+   ↓
+Render
+   ↓
+Public API
 
-Deployment was validated using both `/health` and realistic `/predict` requests.
 
+### Live API
+
+```markdown
 ## Live API
 
-**API:** https://ev-service-intelligence.onrender.com
+```text
+API
+↓
+https://ev-service-intelligence.onrender.com
 
-**Swagger:** https://ev-service-intelligence.onrender.com/docs
+Swagger Documentation
+↓
+https://ev-service-intelligence.onrender.com/docs
 
+Health Check
+↓
+https://ev-service-intelligence.onrender.com/health
+
+
+### Tech Stack
+
+```markdown
 ## Tech Stack
 
-Python • Pandas • NumPy • Scikit-learn • SHAP • FastAPI • Docker • GitHub • Render
+```text
+Python
+Pandas
+NumPy
+Scikit-learn
+SHAP
+FastAPI
+Docker
+GitHub
+Render
 
+
+
+### Status
+
+```markdown
 ## Status
 
-**Deployed and Live 🚀**
+```text
+ML Models          ✓
+FastAPI            ✓
+Docker             ✓
+Cloud Deployment   ✓
+Public API         ✓
+
+STATUS: DEPLOYED & LIVE 🚀
