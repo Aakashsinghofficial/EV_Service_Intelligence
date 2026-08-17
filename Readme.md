@@ -1,64 +1,78 @@
 # EV Service Intelligence Platform
 
-An end-to-end Machine Learning platform designed to predict key EV service outcomes before a service visit is completed.
+An end-to-end Machine Learning platform for predicting EV service outcomes.
 
-The platform predicts:
+## Problem
 
-- Repair Cost
-- Turnaround Time (TAT)
-- Delay Risk
+EV service centers need to estimate repair cost, turnaround time, and delay risk before completing a service visit.
 
-The project covers the complete ML lifecycle from data generation and analysis to model development, explainability, API development, Docker containerization, and cloud deployment.
+## ML Targets
 
----
-
-## Business Problem
-
-EV service centers need to estimate repair cost, service turnaround time, and potential delays before completing a service visit.
-
-This platform uses vehicle, battery, service, workshop, technician, parts, and warranty information to generate actionable predictions that can support service planning and operational decision-making.
-
-### Potential Business Users
-
-- Service Center Managers
-- Workshop Operations Teams
-- Service Advisors
-- Parts & Supply Teams
-- After-Sales Teams
-
----
-
-## ML Objectives
-
-| Prediction | ML Problem | Business Output |
+| Target | Type | Output |
 |---|---|---|
-| Repair Cost | Regression | Predicted repair cost |
-| Turnaround Time (TAT) | Regression | Predicted service duration in days |
-| Delay Risk | Binary Classification | Delay probability and LOW/HIGH risk |
+| Repair Cost | Regression | Predicted cost |
+| TAT | Regression | Predicted service time |
+| Delay Risk | Classification | Probability + LOW/HIGH risk |
 
----
+## Architecture
 
-## Key Features
+```text
+EV Service Data
+      ↓
+EDA & Feature Engineering
+      ↓
+ML Models
+      ↓
+FastAPI
+      ↓
+Docker
+      ↓
+Render
+      ↓
+Public API
 
-The prediction system uses information related to:
+## Models
 
-- Vehicle characteristics
-- Vehicle age
-- Battery age and health
-- Battery replacement
-- Service visit history
-- Issue family and exact issue
-- Parts requirement and availability
-- Parts ordering status
-- Expected parts ETA
-- Workshop utilization
-- Active jobs on arrival
-- Technician experience
-- Technician efficiency
-- Repair complexity
-- Labor hours
-- Warranty status
-- Warranty coverage
-- Day type
+- `repair_cost_model.pkl` — Repair Cost
+- `tat_model.pkl` — Turnaround Time
+- `delay_model.pkl` — Delay Risk
 
+SHAP was used for model explainability.
 
+## API
+
+### `GET /health`
+
+Checks API and model status.
+
+### `POST /predict`
+
+Returns:
+
+```json
+{
+  "Predicted_Repair_Cost": 2016.71,
+  "Predicted_TAT_Days": 0.47,
+  "Delay_Probability": 0.03,
+  "Delay_Risk": "LOW"
+}
+
+## Deployment
+
+Built with **FastAPI + Docker** and deployed on **Render**.
+
+Deployment was validated using both `/health` and realistic `/predict` requests.
+
+## Live API
+
+**API:** https://ev-service-intelligence.onrender.com
+
+**Swagger:** https://ev-service-intelligence.onrender.com/docs
+
+## Tech Stack
+
+Python • Pandas • NumPy • Scikit-learn • SHAP • FastAPI • Docker • GitHub • Render
+
+## Status
+
+**Deployed and Live 🚀**
